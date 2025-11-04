@@ -29,6 +29,7 @@ const Cliente = db.define(
     correo: {
       type: DataTypes.STRING,
       allowNull: false,
+      isEmail: true,
     },
   },
   {

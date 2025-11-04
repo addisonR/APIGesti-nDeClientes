@@ -1,5 +1,6 @@
 import Cliente from "../models/Cliente.js";
 import { datosValidos } from "../helpers/validaciones.js";
+import { where } from "sequelize";
 
 const crearCliente = async (rif, razon_social, telefono, direccion, correo) => {
   const esValido = datosValidos(rif, razon_social, telefono, direccion, correo);
@@ -59,7 +60,31 @@ const obtenerClientePorId = async (id) => {
     }
     return { estatusCode: 200, mensaje: "Datos del cliente", data: cliente };
   } catch (error) {
-    console.log(error);
+    throw {
+      estatusCode: 500,
+      mensaje: "Error interno del servidor",
+      data: error.name,
+    };
+  }
+};
+
+const actualizarCliente = async (id, datos) => {
+  try {
+    const clienteExiste = await Cliente.findByPk(id);
+    if (!clienteExiste) {
+      return { estatusCode: 404, mensaje: "No se escontro el Cliente" };
+    }
+
+    const clienteActualizado = await Cliente.update(
+      { datos },
+      { where: { id } }
+    );
+    return {
+      estatusCode: 200,
+      mensaje: "Cliente fue actualizado",
+      data: clienteActualizado,
+    };
+  } catch (error) {
     throw {
       estatusCode: 500,
       mensaje: "Error interno del servidor",
