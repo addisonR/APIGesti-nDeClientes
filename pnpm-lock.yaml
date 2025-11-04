@@ -19,7 +19,7 @@ importers:
         version: 6.37.7(mysql2@3.15.3)
     devDependencies:
       dotenv:
-        specifier: ^17.2.3
+        specifier: 17.2.3
         version: 17.2.3
 
 packages:
