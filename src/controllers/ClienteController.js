@@ -44,8 +44,36 @@ const obtenerClientePorId = async (req, res) => {
   }
 };
 
+const actualizarCliente = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Parametros de la request incompletos" });
+  }
+
+  const { rif, razon_social, telefono, direccion, correo } = req.body;
+  try {
+    const cliente = await ClienteService.actualizarCliente(
+      id,
+      rif,
+      razon_social,
+      telefono,
+      direccion,
+      correo
+    );
+    if (cliente.estatusCode !== 200) {
+      return res.status(cliente.estatusCode).json(cliente.mensaje);
+    }
+    return res.status(200).json(cliente.mensaje);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
 export default {
   crearCliente,
   obtenerClientes,
   obtenerClientePorId,
+  actualizarCliente,
 };

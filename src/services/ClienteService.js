@@ -38,7 +38,9 @@ const crearCliente = async (rif, razon_social, telefono, direccion, correo) => {
 
 const obtenerClientes = async () => {
   try {
-    const listaClientes = await Cliente.findAll();
+    const listaClientes = await Cliente.findAll({
+      where: { estatus: 1 },
+    });
     if (listaClientes.length === 0) {
       return { estatus: 404, mensaje: "No se encontraron datos" };
     }
@@ -68,15 +70,33 @@ const obtenerClientePorId = async (id) => {
   }
 };
 
-const actualizarCliente = async (id, datos) => {
+const actualizarCliente = async (
+  id,
+  rif,
+  razon_social,
+  telefono,
+  direccion,
+  correo
+) => {
   try {
+    const esValido = datosValidos(
+      rif,
+      razon_social,
+      telefono,
+      direccion,
+      correo
+    );
+    if (esValido !== "Datos validados") {
+      return { estatusCode: 400, mensaje: esValido };
+    }
+
     const clienteExiste = await Cliente.findByPk(id);
     if (!clienteExiste) {
       return { estatusCode: 404, mensaje: "No se escontro el Cliente" };
     }
 
     const clienteActualizado = await Cliente.update(
-      { datos },
+      { rif, razon_social, telefono, direccion, correo },
       { where: { id } }
     );
     return {
@@ -97,4 +117,5 @@ export default {
   crearCliente,
   obtenerClientes,
   obtenerClientePorId,
+  actualizarCliente,
 };

@@ -31,6 +31,11 @@ const Cliente = db.define(
       allowNull: false,
       isEmail: true,
     },
+    estatus: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+      defaultValue: 1,
+    },
   },
   {
     timestamps: false,
