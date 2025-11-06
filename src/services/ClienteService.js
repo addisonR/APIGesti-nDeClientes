@@ -113,9 +113,35 @@ const actualizarCliente = async (
   }
 };
 
+const borrarCliente = async (id) => {
+  try {
+    const clienteExiste = await Cliente.findByPk(id);
+    if (!clienteExiste) {
+      return { estatusCode: 404, mensaje: "No se escontro el Cliente" };
+    }
+
+    const clienteEliminado = await Cliente.update(
+      { estatus: 0 },
+      { where: { id } }
+    );
+    return {
+      estatusCode: 200,
+      mensaje: "Cliente fue eliminado",
+      data: clienteEliminado,
+    };
+  } catch (error) {
+    throw {
+      estatusCode: 500,
+      mensaje: "Error interno del servidor",
+      data: error.name,
+    };
+  }
+};
+
 export default {
   crearCliente,
   obtenerClientes,
   obtenerClientePorId,
   actualizarCliente,
+  borrarCliente,
 };

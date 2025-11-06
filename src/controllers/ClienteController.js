@@ -71,9 +71,30 @@ const actualizarCliente = async (req, res) => {
   }
 };
 
+const borrarCliente = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Parametros de la request incompletos" });
+  }
+
+  try {
+    const cliente = await ClienteService.borrarCliente(id);
+    if (cliente.estatusCode !== 200) {
+      return res.status(cliente.estatusCode).json(cliente.mensaje);
+    }
+    return res.status(200).json(cliente.mensaje);
+  } catch (error) {
+    console.log("aqui error:", error);
+    return res.status(500).json(error);
+  }
+};
+
 export default {
   crearCliente,
   obtenerClientes,
   obtenerClientePorId,
   actualizarCliente,
+  borrarCliente,
 };
